@@ -21,6 +21,6 @@ public class GameManager : MonoBehaviour {
         }
         INSTANCE = this;
         Agents = FindObjectsOfType<Agent>();
-        Debug.Log(Agents.Length);
+        //Debug.Log(Agents.Length);
 	}
 }

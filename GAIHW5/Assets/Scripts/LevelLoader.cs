@@ -11,9 +11,10 @@ public class LevelLoader : MonoBehaviour {
     public GameObject Tile;
     public GameObject PartialTile;
     public string fileName;
+    public GameObject[][] TileGrid;
+    public int[][] TileStates; //0 = unexplored, 1 = explored, 2 = used
+
     string[][] grid;
-    GameObject[][] TileGrid;
-    int[][] TileStates; //0 = unexplored, 1 = explored, 2 = used
 
     // Use this for initialization
     void Start ()
@@ -48,7 +49,7 @@ public class LevelLoader : MonoBehaviour {
         }
         catch
         {
-            Debug.Log("Could not read input file for level loader.");
+            Debug.Log("Could not read input file " + fileName + " for level loader.");
         }
 
         int j = 0, u = 0, uT = 0;
