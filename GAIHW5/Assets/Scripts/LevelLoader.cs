@@ -12,6 +12,8 @@ public class LevelLoader : MonoBehaviour {
     public GameObject PartialTile;
     public string fileName;
     string[][] grid;
+    GameObject[][] TileGrid;
+    int[][] TileStates; //0 = unexplored, 1 = explored, 2 = used
 
     // Use this for initialization
     void Start ()
@@ -49,7 +51,7 @@ public class LevelLoader : MonoBehaviour {
             Debug.Log("Could not read input file for level loader.");
         }
 
-        int j = 0, u = 0;
+        int j = 0, u = 0, uT = 0;
         float x = 0, y = 0;
 
         for (; j < i; ++j) 
@@ -58,23 +60,24 @@ public class LevelLoader : MonoBehaviour {
             {
                 if (grid[j][u] == "T")
                 {
-                    Instantiate(Tree, new Vector3(x, y, 0), Quaternion.identity);
+                    TileGrid[j][uT] = Instantiate(Tree, new Vector3(x, y, 0), Quaternion.identity);
                 }
                 else if (grid[j][u] == "@")
                 {
-                    Instantiate(Block, new Vector3(x, y, 0), Quaternion.identity);
+                    TileGrid[j][uT] = Instantiate(Block, new Vector3(x, y, 0), Quaternion.identity);
                 }
                 else if (grid[j][u] == "." && grid[j][u + 1] == ".")
                 {
-                    Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
+                    TileGrid[j][uT] = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
                     ++u;
                 }
                 else if (grid[j][u] == "." && grid[j][u + 1] != ".")
                 {
-                    Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
+                    TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
                     x -= 0.5f;
                 }
                 ++x;
+                ++uT;
             }
             ++y;
         }
@@ -82,6 +85,6 @@ public class LevelLoader : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
+        //TODO Update GUI on GameObject TileGrid elements in conjunction with TileStates
 	}
 }
