@@ -49,18 +49,22 @@ public class LevelLoader : MonoBehaviour {
 
         int x = 0, y = 0, j = 0, u = 0;
 
-        for (j = 0; j < i; ++j) 
+        for (; j < i; ++j) 
         {
-            for (u = 0; u < grid[j].Length-1; ++u)
+            for (; u < grid[j].Length-1; ++u)
             {
                 if (grid[j][u] == "T")
                 {
                     Instantiate(Block, new Vector3(x, y, 0), Quaternion.identity);
                 }
-                else if (grid[j][u] == "." && grid[j][u+1] == ".")
+                else if (grid[j][u] == "." && grid[j][u + 1] == ".")
                 {
                     Instantiate(Pellet, new Vector3(x, y, 0), Quaternion.identity);
                     ++u;
+                }
+                else if (grid[j][u] == "." && grid[j][u + 1] != ".")
+                {
+                    //partial tile
                 }
                 ++x;
             }
