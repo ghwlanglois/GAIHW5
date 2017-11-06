@@ -22,7 +22,7 @@ GameObject:
   - component: {fileID: 212112157584903646}
   - component: {fileID: 61101145896449784}
   m_Layer: 9
-  m_Name: Wall Placeholder 1
+  m_Name: Tree
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -36,7 +36,7 @@ Transform:
   m_GameObject: {fileID: 1034963447067794}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.4, y: 0.4, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -99,7 +99,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: df3514d44fcc9e7459f22a70fad588eb, type: 3}
-  m_Color: {r: 0.11764694, g: 0, b: 0.58823526, a: 1}
+  m_Color: {r: 0.05013583, g: 0.030655269, b: 0.5955882, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

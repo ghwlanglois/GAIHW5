@@ -237,6 +237,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Block: {fileID: 1245940020544422, guid: c21c59c2138cd4f4799c116a88c3de67, type: 2}
+  Tree: {fileID: 1034963447067794, guid: 9603db45a8148504a9a3ac5d051e288e, type: 2}
   Pellet: {fileID: 1287681769226780, guid: f04838585ca6555418758bd618867202, type: 2}
   fileName: /arena2.txt
 --- !u!4 &770584287

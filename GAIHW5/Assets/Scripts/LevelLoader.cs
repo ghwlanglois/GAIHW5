@@ -7,6 +7,7 @@ using System.IO;
 public class LevelLoader : MonoBehaviour {
 
     public GameObject Block;
+    public GameObject Tree;
     public GameObject Pellet;
     public string fileName;
     string[][] grid;
@@ -54,6 +55,10 @@ public class LevelLoader : MonoBehaviour {
             for (; u < grid[j].Length-1; ++u)
             {
                 if (grid[j][u] == "T")
+                {
+                    Instantiate(Tree, new Vector3(x, y, 0), Quaternion.identity);
+                }
+                else if (grid[j][u] == "@")
                 {
                     Instantiate(Block, new Vector3(x, y, 0), Quaternion.identity);
                 }
