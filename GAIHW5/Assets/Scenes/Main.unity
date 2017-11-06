@@ -238,7 +238,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Block: {fileID: 1245940020544422, guid: c21c59c2138cd4f4799c116a88c3de67, type: 2}
   Tree: {fileID: 1034963447067794, guid: 9603db45a8148504a9a3ac5d051e288e, type: 2}
-  Pellet: {fileID: 1287681769226780, guid: f04838585ca6555418758bd618867202, type: 2}
+  Tile: {fileID: 1334496896575074, guid: 7b7763ed5d8d3a042948b03fa7157fad, type: 2}
+  PartialTile: {fileID: 1892704019424714, guid: 20b031e8e0b425846a98c45f9bca1ab6,
+    type: 2}
   fileName: /arena2.txt
 --- !u!4 &770584287
 Transform:

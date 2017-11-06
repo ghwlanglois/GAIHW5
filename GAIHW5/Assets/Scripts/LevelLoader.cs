@@ -8,7 +8,8 @@ public class LevelLoader : MonoBehaviour {
 
     public GameObject Block;
     public GameObject Tree;
-    public GameObject Pellet;
+    public GameObject Tile;
+    public GameObject PartialTile;
     public string fileName;
     string[][] grid;
 
@@ -48,7 +49,8 @@ public class LevelLoader : MonoBehaviour {
             Debug.Log("Could not read input file for level loader.");
         }
 
-        int x = 0, y = 0, j = 0, u = 0;
+        int j = 0, u = 0;
+        float x = 0, y = 0;
 
         for (; j < i; ++j) 
         {
@@ -64,12 +66,13 @@ public class LevelLoader : MonoBehaviour {
                 }
                 else if (grid[j][u] == "." && grid[j][u + 1] == ".")
                 {
-                    Instantiate(Pellet, new Vector3(x, y, 0), Quaternion.identity);
+                    Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
                     ++u;
                 }
                 else if (grid[j][u] == "." && grid[j][u + 1] != ".")
                 {
-                    //partial tile
+                    Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
+                    x -= 0.5f;
                 }
                 ++x;
             }
