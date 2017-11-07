@@ -10,7 +10,7 @@ public class LevelLoader : MonoBehaviour {
     public GameObject Tree;
     public GameObject Tile;
     public GameObject PartialTile;
-    public string fileName;
+    public TextAsset Map;
     public GameObject[][] TileGrid;
     public int[][] TileStates; //0 = unexplored, 1 = explored, 2 = used
 
@@ -20,38 +20,20 @@ public class LevelLoader : MonoBehaviour {
     void Start ()
     {
         int i = 0;
-        try
-        {
-            string line;
-            StreamReader reader = new StreamReader(fileName, Encoding.Default);
-            using (reader)
+        foreach (string line in Map.text.Split('\n')){
+
+            if (line != null)
             {
-                do
+                string[] entries = line.Split();
+                if (System.Array.IndexOf(entries, "T") != -1 ||
+                    System.Array.IndexOf(entries, "@") != -1 ||
+                    System.Array.IndexOf(entries, ".") != -1)
                 {
-                    line = reader.ReadLine();
-
-                    if (line != null)
-                    {
-                        string[] entries = line.Split();
-                        if (System.Array.IndexOf(entries, "T") != -1 ||
-                            System.Array.IndexOf(entries, "@") != -1 ||
-                            System.Array.IndexOf(entries, ".") != -1)
-                        {
-                            grid[i] = entries;
-                            ++i;
-                        }
-                    }
+                    grid[i] = entries;
+                    ++i;
                 }
-                while (line != null);
-
-                reader.Close();
             }
         }
-        catch
-        {
-            Debug.Log("Could not read input file " + fileName + " for level loader.");
-        }
-
         int j = 0, u = 0, uT = 0;
         float x = 0, y = 0;
 
