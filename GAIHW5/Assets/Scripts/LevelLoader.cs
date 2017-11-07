@@ -54,7 +54,7 @@ public class LevelLoader : MonoBehaviour {
                 if (line.Length>0)
                 {
                     char[] entries = line.ToCharArray();
-                    Debug.Log(entries);
+                    Debug.Log(entries.Length);
                     grid[i] = entries;
                     ++i;
                 } 
@@ -64,7 +64,7 @@ public class LevelLoader : MonoBehaviour {
         float y = 0;
         for (int j = 0; j < height; ++j) {
             float x = 0;
-            for (int u = 0; u < width - 1; ++u) {
+            for (int u = 0; u < width; ++u) {
                 char t = grid[j][u];
                 GameObject go = Puntos(j, u, x, y, t);
                 Point p = go.GetComponent<Point>();
@@ -75,6 +75,8 @@ public class LevelLoader : MonoBehaviour {
             }
             y -= 1.025f;
         }
+
+        ResetColors();
 
         //float y = 0;
         //for (int j = 0; j < height; ++j)
@@ -116,19 +118,6 @@ public class LevelLoader : MonoBehaviour {
     {
         GameObject point = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
         SpriteRenderer sr = point.GetComponent<SpriteRenderer>();
-        switch (t) {
-            case '@':
-                sr.color = Color.black;
-                break;
-            case 'T':
-                sr.color = Color.grey;
-                break;
-            case '.':
-                sr.color = Color.red;
-                break;
-            default:
-                break;
-        }
         return point;
     }
 
@@ -136,5 +125,27 @@ public class LevelLoader : MonoBehaviour {
     void Update()
     {
         
+    }
+
+    public void ResetColors() {
+        foreach (GameObject[] array in TileGrid) {
+            foreach(GameObject tile in array) {
+                SpriteRenderer sr = tile.GetComponent<SpriteRenderer>();
+                switch (tile.GetComponent<Point>().Type) {
+                    case '@':
+                        sr.color = Color.black;
+                        break;
+                    case 'T':
+                        sr.color = Color.grey;
+                        break;
+                    case '.':
+                        sr.color = Color.red;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+       
     }
 }

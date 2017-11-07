@@ -10,15 +10,16 @@ public class Pathfinder : MonoBehaviour {
     const char OUT_OF_BOUNDS = '@';
     const char TREE = 'T';
 
+    public float pathDelay = .5f;
+
+    public Color inQueueColor = Color.yellow;
+    public Color exploredColor = Color.blue;
+    public Color pathColor = Color.green;
+
     public int ax;
     public int ay;
     public int bx;
     public int by;
-
-    // Use this for initialization
-    void Start() {
-
-    }
 
     // Update is called once per frame
     void Update() {
@@ -26,12 +27,8 @@ public class Pathfinder : MonoBehaviour {
             Point A = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
             Point B = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
             Debug.Log(A); Debug.Log(B);
-            List<Point> path = aStar(A,B);
-            string s = "";
-            foreach (Point p in path) {
-                s+=p.ToString()+" ";
-            }
-            Debug.Log(s);
+            List<Point> path = new List<Point>();
+            StartCoroutine(aStar(A,B,path));
         }
     }
 
@@ -51,7 +48,8 @@ public class Pathfinder : MonoBehaviour {
         return closest;
     }
 
-    List<Point> aStar(Point start, Point goal) {
+    IEnumerator aStar(Point start, Point goal, List<Point> path) {
+        GameManager.INSTANCE.levelLoader.ResetColors();
         // The set of nodes already evaluated
         HashSet<Point> closedSet = new HashSet<Point>();
 
@@ -85,11 +83,13 @@ public class Pathfinder : MonoBehaviour {
             Debug.Log("current");
             Debug.Log(current);
             if (current == goal) {
-                return reconstructPath(cameFrom, current);
+                StartCoroutine(reconstructPath(cameFrom, current, path));
+                yield break;
             }
 
             openSet.Remove(current);
             closedSet.Add(current);
+            GameManager.INSTANCE.levelLoader.TileGrid[current.X][current.Y].GetComponent<SpriteRenderer>().color = exploredColor;
             Debug.Log("Neighbors");
             for (int i = 0; i < 4; i++) {
                 //TODO: actually get neighbors
@@ -104,7 +104,8 @@ public class Pathfinder : MonoBehaviour {
                     continue;       // Ignore the neighbor which is already evaluated.
                 }
 
-                if (!openSet.Contains(neighbor) && neighbor.Type == WALKABLE) {	// Discover a new node
+                if (!openSet.Contains(neighbor) && neighbor.Type == WALKABLE) { // Discover a new node
+                    GameManager.INSTANCE.levelLoader.TileGrid[neighbor.X][neighbor.Y].GetComponent<SpriteRenderer>().color = inQueueColor;
                     openSet.Add(neighbor);
                 }
 
@@ -120,18 +121,21 @@ public class Pathfinder : MonoBehaviour {
                 gScore[neighbor] = tentative_gScore;
                 fScore[neighbor] = gScore[neighbor] + distBetweenPoints(neighbor, goal);
             }
+            yield return new WaitForSeconds(pathDelay);
         }
-        //There is no path
-        return null;
     }
 
-    List<Point> reconstructPath(Dictionary<Point,Point> cameFrom, Point current) {
-        List<Point> path = new List<Point>();
+    IEnumerator reconstructPath(Dictionary<Point,Point> cameFrom, Point current, List<Point> path) {
         path.Add(current);
         while (cameFrom.ContainsKey(current)) {
+            
             current = cameFrom[current];
             path.Insert(0, current);
         }
-        return path;
+        foreach(Point p in path) {
+            GameManager.INSTANCE.levelLoader.TileGrid[p.X][p.Y].GetComponent<SpriteRenderer>().color = pathColor;
+            yield return new WaitForSeconds(pathDelay / 4);
+        }
+        
     }
 }

@@ -222,10 +222,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 840ee068d84d120469342fb4c49b9b77, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ax: 1
+  pathDelay: 0.3
+  inQueueColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
+  exploredColor: {r: 0, g: 0, b: 1, a: 1}
+  pathColor: {r: 0, g: 1, b: 0, a: 1}
+  ax: 2
   ay: 3
-  bx: 1
-  by: 4
+  bx: 7
+  by: 6
 --- !u!1 &1883862551
 GameObject:
   m_ObjectHideFlags: 0
