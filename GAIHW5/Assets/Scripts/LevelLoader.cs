@@ -83,21 +83,22 @@ public class LevelLoader : MonoBehaviour {
                 }
                 else if (grid[j][u] == '.' && grid[j][u + 1] != '.')
                 {
-                    x -= 0.5f;
+                    x -= 0.257f;
                     TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
+                    x -= 0.257f;
                 }
                 TileStates[j][uT] = 0;
                 Debug.Log("TileGrid[" + j.ToString() + "][" + uT.ToString() + "] = " + TileGrid[j][uT].name);
-                x += 1f;
+                x += 1.025f;
                 ++uT;
             }
-            y -= 1f;
+            y -= 1.025f;
         }
     }
 
     // Update is called once per frame
     void Update()
-    {/*
+    {
         //Change the tile colors
         for (int i = 0; i < height; ++i)
         {
@@ -120,6 +121,6 @@ public class LevelLoader : MonoBehaviour {
                     }
                 }
             }
-        }*/
+        }
     }
 }
