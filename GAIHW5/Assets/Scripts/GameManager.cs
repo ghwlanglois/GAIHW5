@@ -8,6 +8,8 @@ public class GameManager : MonoBehaviour {
 
     Agent[] agents;
 
+    public LevelLoader levelLoader;
+
     public Agent[] Agents {
         get;
         set;
