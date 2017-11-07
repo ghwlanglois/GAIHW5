@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Point{
-
-    int x;
-    int y;
-    char type;
+public class Point : MonoBehaviour
+{
+    public int x;
+    public int y;
+    public char type;
 
     public int X {
         get {
