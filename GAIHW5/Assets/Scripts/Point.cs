@@ -5,9 +5,12 @@ using UnityEngine;
 [System.Serializable]
 public class Point : MonoBehaviour
 {
-    public int x;
-    public int y;
-    public char type;
+    [SerializeField]
+    int x;
+    [SerializeField]
+    int y;
+    [SerializeField]
+    char type;
 
     public int X {
         get {
@@ -36,11 +39,6 @@ public class Point : MonoBehaviour
         }
     }
 
-    Point (int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
     // override object.Equals
     public override bool Equals(object obj) {
         //       
@@ -58,9 +56,38 @@ public class Point : MonoBehaviour
         return this.X == o.X && this.Y == o.Y;
     }
 
+    // override object.Equals
+    static public bool operator== (Point a, Point b) {
+        //       
+        // See the full list of guidelines at
+        //   http://go.microsoft.com/fwlink/?LinkID=85237  
+        // and also the guidance for operator== at
+        //   http://go.microsoft.com/fwlink/?LinkId=85238
+        //
+       
+        return a.X == b.X && a.Y == b.Y;
+    }
+
+    // override object.Equals
+    static public bool operator !=(Point a, Point b) {
+        //       
+        // See the full list of guidelines at
+        //   http://go.microsoft.com/fwlink/?LinkID=85237  
+        // and also the guidance for operator== at
+        //   http://go.microsoft.com/fwlink/?LinkId=85238
+        //
+
+        return a.X != b.X || a.Y != b.Y;
+    }
+
+
     // override object.GetHashCode
     public override int GetHashCode() {
         int tmp = (Y + ((X + 1) / 2));
         return X + (tmp * tmp);
+    }
+
+    public override string ToString() {
+        return "("+X.ToString()+","+Y.ToString()+") "+Type;
     }
 }

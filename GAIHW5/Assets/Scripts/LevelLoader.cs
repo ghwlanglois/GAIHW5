@@ -43,15 +43,15 @@ public class LevelLoader : MonoBehaviour {
         TileStates = new int[height][];
         for (int row =0; row<height; row++) {
             grid[row] = new char[width];
-            TileGrid[row] = new GameObject[width];
             TileStates[row] = new int[width];
+            TileGrid[row] = new GameObject[width];
         }
 
         int i = 0;
         foreach (string line in mapLines){
             if (line != null)
             {
-                if (line.Contains("@"))
+                if (line.Length>0)
                 {
                     char[] entries = line.ToCharArray();
                     Debug.Log(entries);
@@ -62,84 +62,79 @@ public class LevelLoader : MonoBehaviour {
         }
 
         float y = 0;
-        for (int j = 0; j < height; ++j)
-        {
+        for (int j = 0; j < height; ++j) {
             float x = 0;
-            int uT = 0;
-            for (int u = 0; u < width-1; ++u)
-            {
+            for (int u = 0; u < width - 1; ++u) {
                 char t = grid[j][u];
-                char next_t = grid[j][u+1];
-                if (t == 'T')
-                {
-                    Puntos(j, uT, x, y, t);
-                }
-                else if (t == '@')
-                {
-                    Puntos(j, uT, x, y, t);
-                }
-                else if (t == '.' && next_t == '.')
-                {
-                    Puntos(j, uT, x, y, t);
-                    ++u;
-                }
-                else if (t == '.' && next_t != '.')
-                {
-                    x -= 0.257f;
-                    Puntos(j, uT, x, y, t);
-                    x -= 0.257f;
-                }
-                TileStates[j][uT] = 0;
-                x += 1.025f;
-                ++uT;
+                GameObject go = Puntos(j, u, x, y, t);
+                Point p = go.GetComponent<Point>();
+                p.X = j; p.Y = u; p.Type = t;
+                TileGrid[j][u] = (go);
+                TileStates[j][u] = 0;
+                x += 1.025f; 
             }
             y -= 1.025f;
         }
+
+        //float y = 0;
+        //for (int j = 0; j < height; ++j)
+        //{
+        //    float x = 0;
+        //    int uT = 0;
+        //    for (int u = 0; u < width-1; ++u)
+        //    {
+        //        char t = grid[j][u];
+        //        char next_t = grid[j][u+1];
+        //        if (t == 'T')
+        //        {
+        //            Puntos(j, uT, x, y, t);
+        //        }
+        //        else if (t == '@')
+        //        {
+        //            Puntos(j, uT, x, y, t);
+        //        }
+        //        else if (t == '.' && next_t == '.')
+        //        {
+        //            Puntos(j, uT, x, y, t);
+        //            ++u;
+        //        }
+        //        else if (t == '.' && next_t != '.')
+        //        {
+        //            x -= 0.257f;
+        //            Puntos(j, uT, x, y, t);
+        //            x -= 0.257f;
+        //        }
+        //        TileStates[j][uT] = 0;
+        //        x += 1.025f;
+        //        ++uT;
+        //    }
+        //    y -= 1.025f;
+        //}
     }
 
-    void Puntos(int j, int uT, float x, float y, char t)
+    GameObject Puntos(int j, int uT, float x, float y, char t)
     {
-        TileGrid[j][uT] = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
-        TileGrid[j][uT].GetComponent<Point>().x = (int)(x);
-        TileGrid[j][uT].GetComponent<Point>().y = (int)(y);
-        TileGrid[j][uT].GetComponent<Point>().Type = t;
+        GameObject point = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
+        SpriteRenderer sr = point.GetComponent<SpriteRenderer>();
+        switch (t) {
+            case '@':
+                sr.color = Color.black;
+                break;
+            case 'T':
+                sr.color = Color.grey;
+                break;
+            case '.':
+                sr.color = Color.red;
+                break;
+            default:
+                break;
+        }
+        return point;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //Change the tile colors
-        for (int i = 0; i < TileStates.Length; ++i)
-        {
-            for (int j = 0; j < TileStates[i].Length - 1; ++j)
-            {
-                Debug.Log("Checking TileGrid[" + i.ToString() + "][" + j.ToString() + "] = " + TileGrid[i][j].name);
-                if (TileGrid[i][j].name.Contains("Point"))
-                {
-                    SpriteRenderer sr = TileGrid[i][j].GetComponent<SpriteRenderer>();
-                    char t = TileGrid[i][j].GetComponent<Point>().Type;
-                    if (t == '@')
-                    {
-                        sr.color = Color.black;
-                    }
-                    else if (t == 'T')
-                    {
-                        sr.color = Color.gray;
-                    }
-                    else if (TileStates[i][j] == 0)
-                    {
-                        sr.color = Color.red;
-                    }
-                    else if (TileStates[i][j] == 1)
-                    {
-                        sr.color = Color.white;
-                    }
-                    else if (TileStates[i][j] == 2)
-                    {
-                        sr.color = Color.green;
-                    }
-                }
-            }
-        }
+        
     }
 }

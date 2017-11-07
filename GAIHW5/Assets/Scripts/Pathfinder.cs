@@ -10,6 +10,11 @@ public class Pathfinder : MonoBehaviour {
     const char OUT_OF_BOUNDS = '@';
     const char TREE = 'T';
 
+    public int ax;
+    public int ay;
+    public int bx;
+    public int by;
+
     // Use this for initialization
     void Start() {
 
@@ -17,18 +22,28 @@ public class Pathfinder : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-
+        if (Input.GetKeyDown(KeyCode.G)) {
+            Point A = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
+            Point B = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
+            Debug.Log(A); Debug.Log(B);
+            List<Point> path = aStar(A,B);
+            string s = "";
+            foreach (Point p in path) {
+                s+=p.ToString()+" ";
+            }
+            Debug.Log(s);
+        }
     }
 
     int distBetweenPoints(Point a, Point b) {
         return Mathf.Abs(a.X - b.X) + Mathf.Abs(a.Y - b.Y);
     }
 
-    Point getNextPoint(Dictionary<Point,int> fScore) {
+    Point getNextPoint(HashSet<Point> openSet, Dictionary<Point,int> fScore) {
         int minScore = int.MaxValue;
         Point closest = null;
         foreach (Point p in fScore.Keys) {
-            if (fScore[p] < minScore) {
+            if (fScore[p] < minScore && openSet.Contains(p)) {
                 closest = p;
                 minScore = fScore[p];
             }
@@ -62,20 +77,29 @@ public class Pathfinder : MonoBehaviour {
 
         // For the first node, that value is completely heuristic.
         fScore[start] = distBetweenPoints(start, goal);
-
-        while (openSet.Count > 0) {
+        int breakout = 0;
+        while (openSet.Count > 0 && breakout < 10000) {
+            breakout++;
             //the node in openSet having the lowest fScore[] value
-            Point current = getNextPoint(fScore);
+            Point current = getNextPoint(openSet,fScore);
+            Debug.Log("current");
+            Debug.Log(current);
             if (current == goal) {
                 return reconstructPath(cameFrom, current);
             }
 
             openSet.Remove(current);
             closedSet.Add(current);
-
+            Debug.Log("Neighbors");
             for (int i = 0; i < 4; i++) {
                 //TODO: actually get neighbors
-                Point neighbor = null;
+                Point neighbor;
+                try {
+                    neighbor = GameManager.INSTANCE.levelLoader.TileGrid[current.X + (i % 2) * (i >= 2 ? -1 : 1)][current.Y + ((i + 1) % 2) * (i >= 2 ? -1 : 1)].GetComponent<Point>();
+                } catch (System.Exception e) {
+                    continue;
+                }
+                Debug.Log(neighbor);
                 if (closedSet.Contains(neighbor)){
                     continue;       // Ignore the neighbor which is already evaluated.
                 }

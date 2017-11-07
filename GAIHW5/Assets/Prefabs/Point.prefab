@@ -20,7 +20,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4068177748318590}
   - component: {fileID: 212250920978741210}
-  - component: {fileID: 114908750875321218}
+  - component: {fileID: 114125203016903852}
   m_Layer: 0
   m_Name: Point
   m_TagString: Untagged
@@ -41,7 +41,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114908750875321218
+--- !u!114 &114125203016903852
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -52,9 +52,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f48e9572e07f6e4699bf31b5dec8587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  x: 0
-  y: 0
-  type: 0
 --- !u!212 &212250920978741210
 SpriteRenderer:
   m_ObjectHideFlags: 1

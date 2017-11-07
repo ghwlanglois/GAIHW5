@@ -173,7 +173,7 @@ public class Agent : MonoBehaviour {
         if (minI < path.Length - 1) {
             //Check if within range of path point to move to next point
             Vector3 targetPoint = path[minI + 1].position;
-            float distance = distance = Vector2.Distance(target.position, transform.position);
+            float distance  = Vector2.Distance(target.position, transform.position);
 
             if (followTarget != null) {
                 targetPoint = followTarget.position - followTarget.right * GetComponentInParent<Flock>().separationDist - followTarget.up * followDirection * GetComponentInParent<Flock>().separationDist/2;
