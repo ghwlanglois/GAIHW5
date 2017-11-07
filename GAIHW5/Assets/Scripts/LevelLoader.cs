@@ -77,6 +77,7 @@ public class LevelLoader : MonoBehaviour {
                     TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
                     x -= 0.5f;
                 }
+                TileStates[j][uT] = 0;
                 ++x;
                 ++uT;
             }
@@ -86,6 +87,25 @@ public class LevelLoader : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        //TODO Update GUI on GameObject TileGrid elements in conjunction with TileStates
+        //Change the tile colors
+        for (int i = 0; i < TileStates.Length; ++i)
+        {
+            for (int j = 0; j < TileStates[i].Length; ++j)
+            {
+                SpriteRenderer sr = TileGrid[i][j].GetComponent<SpriteRenderer>();
+                if (TileStates[i][j] == 0)
+                {
+                    sr.color = Color.red;
+                }
+                else if (TileStates[i][j] == 1)
+                {
+                    sr.color = Color.white;
+                }
+                else if (TileStates[i][j] == 2)
+                {
+                    sr.color = Color.green;
+                }
+            }
+        }
 	}
 }
