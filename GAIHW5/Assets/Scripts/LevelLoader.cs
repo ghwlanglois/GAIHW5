@@ -5,11 +5,8 @@ using System.Text;
 using System.IO;
 
 public class LevelLoader : MonoBehaviour {
-
-    public GameObject Block;
-    public GameObject Tree;
+    
     public GameObject Tile;
-    public GameObject PartialTile;
     public TextAsset Map;
     public GameObject[][] TileGrid;
     public int[][] TileStates; //0 = unexplored, 1 = explored, 2 = used
@@ -71,24 +68,28 @@ public class LevelLoader : MonoBehaviour {
             int uT = 0;
             for (int u = 0; u < width-1; ++u)
             {
-                if (grid[j][u] == 'T') {
-                    TileGrid[j][uT] = Instantiate(Tree, new Vector3(x, y, 0), Quaternion.identity);
+                char t = grid[j][u];
+                char next_t = grid[j][u+1];
+                if (t == 'T')
+                {
+                    Puntos(j, uT, x, y, t);
                 }
-                else if (grid[j][u] == '@') {
-                    TileGrid[j][uT] = Instantiate(Block, new Vector3(x, y, 0), Quaternion.identity);
+                else if (t == '@')
+                {
+                    Puntos(j, uT, x, y, t);
                 }
-                else if (grid[j][u] == '.' && grid[j][u + 1] == '.') {
-                    TileGrid[j][uT] = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
+                else if (t == '.' && next_t == '.')
+                {
+                    Puntos(j, uT, x, y, t);
                     ++u;
                 }
-                else if (grid[j][u] == '.' && grid[j][u + 1] != '.')
+                else if (t == '.' && next_t != '.')
                 {
                     x -= 0.257f;
-                    TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
+                    Puntos(j, uT, x, y, t);
                     x -= 0.257f;
                 }
                 TileStates[j][uT] = 0;
-                Debug.Log("TileGrid[" + j.ToString() + "][" + uT.ToString() + "] = " + TileGrid[j][uT].name);
                 x += 1.025f;
                 ++uT;
             }
@@ -96,18 +97,36 @@ public class LevelLoader : MonoBehaviour {
         }
     }
 
+    void Puntos(int j, int uT, float x, float y, char t)
+    {
+        TileGrid[j][uT] = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
+        TileGrid[j][uT].GetComponent<Point>().x = (int)(x);
+        TileGrid[j][uT].GetComponent<Point>().y = (int)(y);
+        TileGrid[j][uT].GetComponent<Point>().Type = t;
+    }
+
     // Update is called once per frame
     void Update()
     {
         //Change the tile colors
-        for (int i = 0; i < height; ++i)
+        for (int i = 0; i < TileStates.Length; ++i)
         {
-            for (int j = 0; j < width; ++j)
+            for (int j = 0; j < TileStates[i].Length - 1; ++j)
             {
-                if (TileGrid[i][j].name.Contains("Tile"))
+                Debug.Log("Checking TileGrid[" + i.ToString() + "][" + j.ToString() + "] = " + TileGrid[i][j].name);
+                if (TileGrid[i][j].name.Contains("Point"))
                 {
                     SpriteRenderer sr = TileGrid[i][j].GetComponent<SpriteRenderer>();
-                    if (TileStates[i][j] == 0)
+                    char t = TileGrid[i][j].GetComponent<Point>().Type;
+                    if (t == '@')
+                    {
+                        sr.color = Color.black;
+                    }
+                    else if (t == 'T')
+                    {
+                        sr.color = Color.gray;
+                    }
+                    else if (TileStates[i][j] == 0)
                     {
                         sr.color = Color.red;
                     }
