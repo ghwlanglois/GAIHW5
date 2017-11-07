@@ -83,7 +83,7 @@ public class LevelLoader : MonoBehaviour {
                 }
                 else if (grid[j][u] == '.' && grid[j][u + 1] != '.')
                 {
-                    x -= 0.5f;
+                    x -= 0.25f;
                     TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
                 }
                 TileStates[j][uT] = 0;
@@ -97,7 +97,7 @@ public class LevelLoader : MonoBehaviour {
 
     // Update is called once per frame
     void Update()
-    {/*
+    {
         //Change the tile colors
         for (int i = 0; i < height; ++i)
         {
@@ -120,6 +120,6 @@ public class LevelLoader : MonoBehaviour {
                     }
                 }
             }
-        }*/
+        }
     }
 }
