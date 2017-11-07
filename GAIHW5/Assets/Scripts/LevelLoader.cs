@@ -59,6 +59,7 @@ public class LevelLoader : MonoBehaviour {
                     System.Array.IndexOf(entries, '@') != -1 ||
                     System.Array.IndexOf(entries, '.') != -1)
                 {
+                    Debug.Log(entries);
                     grid[i] = entries;
                     Debug.Log("Hello");
                     ++i;
