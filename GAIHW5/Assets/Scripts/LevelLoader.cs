@@ -85,6 +85,7 @@ public class LevelLoader : MonoBehaviour {
                 {
                     x -= 0.257f;
                     TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
+                    x -= 0.257f;
                 }
                 TileStates[j][uT] = 0;
                 Debug.Log("TileGrid[" + j.ToString() + "][" + uT.ToString() + "] = " + TileGrid[j][uT].name);
