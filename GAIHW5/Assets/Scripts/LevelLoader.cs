@@ -20,15 +20,20 @@ public class LevelLoader : MonoBehaviour {
     void Start ()
     {
         int i = 0;
-        foreach (string line in Map.text.Split('\n')){
-
+        foreach (string line in Map.text.Split('\n'))
+        {
             if (line != null)
             {
-                string[] entries = line.Split();
+                string[] entries = new string[line.Split().Length];
+                for (int l = 0; l < line.Split().Length; l++)
+                {
+                    entries[l] = System.Convert.ToString(line.Split()[l]);
+                }
                 if (System.Array.IndexOf(entries, "T") != -1 ||
                     System.Array.IndexOf(entries, "@") != -1 ||
                     System.Array.IndexOf(entries, ".") != -1)
                 {
+                    Debug.Log(entries);
                     grid[i] = entries;
                     ++i;
                 }
