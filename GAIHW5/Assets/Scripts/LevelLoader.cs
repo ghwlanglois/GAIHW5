@@ -15,12 +15,43 @@ public class LevelLoader : MonoBehaviour {
     public int[][] TileStates; //0 = unexplored, 1 = explored, 2 = used
 
     char[][] grid;
+    int height;
+    int width;
 
     // Use this for initialization
     void Start ()
     {
+        List<string> mapLines = new List<string>(Map.text.Split('\n'));
+
+        string tmp;
+
+        //TODO: save type
+        mapLines.RemoveAt(0);
+
+        tmp = mapLines[0].Substring(7);
+        Debug.Log(tmp);
+        height = int.Parse(tmp);
+
+        mapLines.RemoveAt(0);
+
+        tmp = mapLines[0].Substring(6);
+        Debug.Log(tmp);
+        width = int.Parse(tmp);
+
+        mapLines.RemoveAt(0);
+        mapLines.RemoveAt(0);
+
+        grid = new char[height][];
+        TileGrid = new GameObject[height][];
+        TileStates = new int[height][];
+        for (int row =0; row<height; row++) {
+            grid[row] = new char[width];
+            TileGrid[row] = new GameObject[width];
+            TileStates[row] = new int[width];
+        }
+
         int i = 0;
-        foreach (string line in Map.text.Split('\n')){
+        foreach (string line in mapLines){
             if (line != null)
             {
                 char[] entries = line.ToCharArray();
@@ -31,7 +62,7 @@ public class LevelLoader : MonoBehaviour {
                     grid[i] = entries;
                     Debug.Log("Hello");
                     ++i;
-                }
+                } 
             }
         }
         int j = 0, u = 0, uT = 0;
