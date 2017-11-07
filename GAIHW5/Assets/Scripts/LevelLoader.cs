@@ -54,24 +54,22 @@ public class LevelLoader : MonoBehaviour {
         foreach (string line in mapLines){
             if (line != null)
             {
-                char[] entries = line.ToCharArray();
-                if (System.Array.IndexOf(entries, 'T') != -1 ||
-                    System.Array.IndexOf(entries, '@') != -1 ||
-                    System.Array.IndexOf(entries, '.') != -1)
+                if (line.Contains("@"))
                 {
+                    char[] entries = line.ToCharArray();
                     Debug.Log(entries);
                     grid[i] = entries;
-                    Debug.Log("Hello");
                     ++i;
                 } 
             }
         }
-        int j = 0, u = 0, uT = 0;
-        float x = 0, y = 0;
 
-        for (; j < i; ++j) 
+        float y = 0;
+        for (int j = 0; j < height; ++j)
         {
-            for (; u < grid[j].Length-1; ++u)
+            float x = 0;
+            int uT = 0;
+            for (int u = 0; u < width-1; ++u)
             {
                 if (grid[j][u] == 'T') {
                     TileGrid[j][uT] = Instantiate(Tree, new Vector3(x, y, 0), Quaternion.identity);
@@ -85,38 +83,43 @@ public class LevelLoader : MonoBehaviour {
                 }
                 else if (grid[j][u] == '.' && grid[j][u + 1] != '.')
                 {
-                    TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
                     x -= 0.5f;
+                    TileGrid[j][uT] = Instantiate(PartialTile, new Vector3(x, y, 0), Quaternion.identity);
                 }
                 TileStates[j][uT] = 0;
-                ++x;
+                Debug.Log("TileGrid[" + j.ToString() + "][" + uT.ToString() + "] = " + TileGrid[j][uT].name);
+                x += 1f;
                 ++uT;
             }
-            ++y;
+            y -= 1f;
         }
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {/*
         //Change the tile colors
-        for (int i = 0; i < TileStates.Length; ++i)
+        for (int i = 0; i < height; ++i)
         {
-            for (int j = 0; j < TileStates[i].Length; ++j)
+            for (int j = 0; j < width; ++j)
             {
-                SpriteRenderer sr = TileGrid[i][j].GetComponent<SpriteRenderer>();
-                if (TileStates[i][j] == 0)
+                if (TileGrid[i][j].name.Contains("Tile"))
                 {
-                    sr.color = Color.red;
-                }
-                else if (TileStates[i][j] == 1)
-                {
-                    sr.color = Color.white;
-                }
-                else if (TileStates[i][j] == 2)
-                {
-                    sr.color = Color.green;
+                    SpriteRenderer sr = TileGrid[i][j].GetComponent<SpriteRenderer>();
+                    if (TileStates[i][j] == 0)
+                    {
+                        sr.color = Color.red;
+                    }
+                    else if (TileStates[i][j] == 1)
+                    {
+                        sr.color = Color.white;
+                    }
+                    else if (TileStates[i][j] == 2)
+                    {
+                        sr.color = Color.green;
+                    }
                 }
             }
-        }
-	}
+        }*/
+    }
 }
