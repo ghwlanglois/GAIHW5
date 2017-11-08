@@ -9,7 +9,7 @@ public class LevelLoader : MonoBehaviour {
     public GameObject Tile;
     public TextAsset Map;
     public GameObject[][] TileGrid;
-    public int[][] TileStates; //0 = unexplored, 1 = explored, 2 = used
+    public HashSet<GameObject> WaypointGrid;
 
     char[][] grid;
     int height;
@@ -26,13 +26,11 @@ public class LevelLoader : MonoBehaviour {
         mapLines.RemoveAt(0);
 
         tmp = mapLines[0].Substring(7);
-        Debug.Log(tmp);
         height = int.Parse(tmp);
 
         mapLines.RemoveAt(0);
 
         tmp = mapLines[0].Substring(6);
-        Debug.Log(tmp);
         width = int.Parse(tmp);
 
         mapLines.RemoveAt(0);
@@ -40,10 +38,8 @@ public class LevelLoader : MonoBehaviour {
 
         grid = new char[height][];
         TileGrid = new GameObject[height][];
-        TileStates = new int[height][];
         for (int row =0; row<height; row++) {
             grid[row] = new char[width];
-            TileStates[row] = new int[width];
             TileGrid[row] = new GameObject[width];
         }
 
@@ -54,7 +50,6 @@ public class LevelLoader : MonoBehaviour {
                 if (line.Length>0)
                 {
                     char[] entries = line.ToCharArray();
-                    Debug.Log(entries.Length);
                     grid[i] = entries;
                     ++i;
                 } 
@@ -70,12 +65,12 @@ public class LevelLoader : MonoBehaviour {
                 Point p = go.GetComponent<Point>();
                 p.X = j; p.Y = u; p.Type = t;
                 TileGrid[j][u] = (go);
-                TileStates[j][u] = 0;
                 x += 1.025f; 
             }
             y -= 1.025f;
         }
 
+        GenerateWaypoints();
         ResetColors();
 
         //float y = 0;
@@ -121,25 +116,23 @@ public class LevelLoader : MonoBehaviour {
         return point;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    void GenerateWaypoints() {
+        WaypointGrid = new HashSet<GameObject>();
     }
 
     public void ResetColors() {
         foreach (GameObject[] array in TileGrid) {
             foreach(GameObject tile in array) {
-                SpriteRenderer sr = tile.GetComponent<SpriteRenderer>();
+                Point p = tile.GetComponent<Point>();
                 switch (tile.GetComponent<Point>().Type) {
                     case '@':
-                        sr.color = Color.black;
+                        p.SR.enabled = false;
                         break;
                     case 'T':
-                        sr.color = Color.grey;
+                        p.SR.color = Color.grey;
                         break;
                     case '.':
-                        sr.color = Color.red;
+                        p.SR.color = Color.red;
                         break;
                     default:
                         break;

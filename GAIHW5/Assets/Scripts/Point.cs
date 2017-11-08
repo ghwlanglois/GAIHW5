@@ -11,6 +11,7 @@ public class Point : MonoBehaviour
     int y;
     [SerializeField]
     char type;
+    SpriteRenderer sr;
 
     public int X {
         get {
@@ -37,6 +38,16 @@ public class Point : MonoBehaviour
         set {
             type = value;
         }
+    }
+
+    public SpriteRenderer SR {
+        get {
+            return sr;
+        }
+    }
+
+    private void Awake() {
+        sr = GetComponent<SpriteRenderer>();
     }
 
     // override object.Equals
