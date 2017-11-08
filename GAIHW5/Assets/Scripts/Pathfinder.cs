@@ -26,18 +26,18 @@ public class Pathfinder : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.T)) {
-            Point Ap = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
-            Point Bp = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
-            Debug.Log(Ap); Debug.Log(Bp);
-            List<Point> path = new List<Point>();
-            StartCoroutine(aStar(Ap,Bp,path));
-        }
-        if (Input.GetKeyDown(KeyCode.W)) {
-            Debug.Log(A); Debug.Log(B);
-            List<Point> path = new List<Point>();
-            StartCoroutine(aStar(A, B, path));
-        }
+        //if (Input.GetKeyDown(KeyCode.T)) {
+        //    Point Ap = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
+        //    Point Bp = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
+        //    Debug.Log(Ap); Debug.Log(Bp);
+        //    List<Point> path = new List<Point>();
+        //    StartCoroutine(aStar(Ap,Bp,path));
+        //}
+        //if (Input.GetKeyDown(KeyCode.W)) {
+        //    Debug.Log(A); Debug.Log(B);
+        //    List<Point> path = new List<Point>();
+        //    StartCoroutine(aStar(A, B, path));
+        //}
     }
 
     int distBetweenPoints(Point a, Point b) {
@@ -57,7 +57,7 @@ public class Pathfinder : MonoBehaviour {
     }
 
     IEnumerator aStar(Point start, Point goal, List<Point> path) {
-        GameManager.INSTANCE.levelLoader.ResetColors();
+        GameManager.INSTANCE.levelLoader.SetColors(start.isWaypoint);
         // The set of nodes already evaluated
         HashSet<Point> closedSet = new HashSet<Point>();
 
