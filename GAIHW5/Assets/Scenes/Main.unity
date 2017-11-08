@@ -1017,7 +1017,7 @@ MonoBehaviour:
   Waypoint: {fileID: 1041723496217206, guid: 5eba905f3659e244fab5ffafa4a67603, type: 2}
   Map: {fileID: 4900000, guid: d153c8a0038df7448af5a01f17d55811, type: 3}
   PF: {fileID: 483208912}
-  GUI_Type: Waypoint
+  GUI_Type: Tile
   ax: 0
   ay: 0
   bx: 0
