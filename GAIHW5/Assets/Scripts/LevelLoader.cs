@@ -11,6 +11,7 @@ public class LevelLoader : MonoBehaviour {
     public TextAsset Map;
     public GameObject[][] TileGrid;
     public HashSet<GameObject> WaypointGrid;
+    public string GUI_Type;
 
     public int ax;
     public int ay;
@@ -24,6 +25,7 @@ public class LevelLoader : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
+        GUI_Type = "Waypoint";
         List<string> mapLines = new List<string>(Map.text.Split('\n'));
 
         string tmp;
@@ -308,10 +310,9 @@ public class LevelLoader : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.W)) {
+        if (GUI_Type == "Waypoint") {
             SetColors(true);
-        }
-        if (Input.GetKeyDown(KeyCode.T)) {
+        } else {
             SetColors(false);
         }
     }

@@ -1,16 +1,28 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
-public class Bouton : MonoBehaviour {
+public class Bouton : MonoBehaviour
+{
+    public Button btn;
+    public LevelLoader LL;
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    void Start()
+    {
+        btn.onClick.AddListener(TaskOnClick);
+        btn.GetComponent<Text>().text = "Waypoint";
+    }
+
+    void TaskOnClick()
+    {
+        if (LL.GUI_Type == "Waypoint")
+        {
+            LL.GUI_Type = "Tile";
+        }
+        else
+        {
+            LL.GUI_Type = "Waypoint";
+        }
+        btn.GetComponentInChildren<Text>().text = LL.GUI_Type;
+    }
 }
