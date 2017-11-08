@@ -77,7 +77,7 @@ public class LevelLoader : MonoBehaviour {
         }
 
         GenerateWaypoints();
-        ResetColors();
+        SetColors(false);
 
         //float y = 0;
         //for (int j = 0; j < height; ++j)
@@ -170,7 +170,7 @@ public class LevelLoader : MonoBehaviour {
                 if (LineOfSight(way, o)) {
                     way.AddNeighbor(o);
                     o.AddNeighbor(way);
-                    Debug.DrawLine(way.transform.position, o.transform.position, Color.blue, Mathf.Infinity);
+                    //Debug.DrawLine(way.transform.position, o.transform.position, Color.blue, Mathf.Infinity);
                 }
             }
         }
@@ -268,7 +268,10 @@ public class LevelLoader : MonoBehaviour {
         return (p.X == x || p.X == x + 1) && (p.Y == y || p.Y == y + 1);
     }
 
-    public void ResetColors() {
+    public void SetColors(bool waypoints) {
+        
+        Color wColor = waypoints? Color.grey : Color.red;
+        Color tColor = Color.black;
         foreach (GameObject[] array in TileGrid) {
             foreach(GameObject tile in array) {
                 Point p = tile.GetComponent<Point>();
@@ -277,13 +280,27 @@ public class LevelLoader : MonoBehaviour {
                         p.SR.enabled = false;
                         break;
                     case 'T':
-                        p.SR.color = Color.grey;
+                        p.SR.color = tColor;
                         break;
                     case '.':
-                        p.SR.color = Color.red;
+                        p.SR.color = wColor;
                         break;
                     default:
                         break;
+                }
+            }
+        }
+        if (waypoints) {
+            HashSet<Point> used = new HashSet<Point>();
+            foreach (GameObject g in WaypointGrid) {
+                Point p = g.GetComponent<Point>();
+                used.Add(p);
+                p.SR.color = Color.red;
+                foreach (Point o in p.Neighbors) {
+                    if (used.Contains(o)) {
+                        continue;
+                    }
+                    Debug.DrawLine(p.transform.position, o.transform.position, Color.red,10f);
                 }
             }
         }
@@ -291,11 +308,11 @@ public class LevelLoader : MonoBehaviour {
     }
 
     private void Update() {
-        if (Input.GetKeyDown(KeyCode.L)) {
-            Point A = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
-            Point B = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
-            Debug.Log(A); Debug.Log(B);
-            Debug.Log(LineOfSight(A, B));
+        if (Input.GetKeyDown(KeyCode.W)) {
+            SetColors(true);
+        }
+        if (Input.GetKeyDown(KeyCode.T)) {
+            SetColors(false);
         }
     }
 }
