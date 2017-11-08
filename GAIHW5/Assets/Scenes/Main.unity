@@ -253,6 +253,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelLoader: {fileID: 1883862552}
+  PF: {fileID: 483208912}
 --- !u!114 &483208912
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1012,11 +1013,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fee8e1a5dcf61d4d97fec1440a073f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  LL: {fileID: 1883862552}
   Tile: {fileID: 1877806036422416, guid: 77c9b0d9cb23694408a6de57a53fabdc, type: 2}
   Waypoint: {fileID: 1041723496217206, guid: 5eba905f3659e244fab5ffafa4a67603, type: 2}
   Map: {fileID: 4900000, guid: d153c8a0038df7448af5a01f17d55811, type: 3}
-  PF: {fileID: 483208912}
   GUI_Type: Tile
   ax: 0
   ay: 0

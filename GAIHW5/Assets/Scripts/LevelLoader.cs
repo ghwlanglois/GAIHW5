@@ -5,11 +5,9 @@ using System.Text;
 using System.IO;
 
 public class LevelLoader : MonoBehaviour {
-    public LevelLoader LL;
     public GameObject Tile;
     public GameObject Waypoint;
     public TextAsset Map;
-    public Pathfinder PF;
     public GameObject[][] TileGrid;
     public HashSet<GameObject> WaypointGrid;
     public string GUI_Type;
@@ -81,15 +79,12 @@ public class LevelLoader : MonoBehaviour {
         }
 
         GenerateWaypoints();
-        SetColors(false);
+        UpdateColors();
     }
 
     GameObject CreatePoint(int j, int uT, float x, float y, char t)
     {
         GameObject point = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
-        TileInteract TI = point.GetComponent<TileInteract>();
-        //TI.LL = this;
-        //TI.PF = PF;
         return point;
     }
 
@@ -287,11 +282,16 @@ public class LevelLoader : MonoBehaviour {
        
     }
 
-    private void Update() {
+    public void UpdateColors() {
         if (GUI_Type == "Waypoint") {
             SetColors(true);
         } else {
             SetColors(false);
         }
+    }
+
+    void Update()
+    {
+        UpdateColors();
     }
 }
