@@ -271,19 +271,23 @@ public class LevelLoader : MonoBehaviour {
     public void ResetColors() {
         foreach (GameObject[] array in TileGrid) {
             foreach(GameObject tile in array) {
-                Point p = tile.GetComponent<Point>();
-                switch (tile.GetComponent<Point>().Type) {
-                    case '@':
-                        p.SR.enabled = false;
-                        break;
-                    case 'T':
-                        p.SR.color = Color.grey;
-                        break;
-                    case '.':
-                        p.SR.color = Color.red;
-                        break;
-                    default:
-                        break;
+                if (tile != null)
+                {
+                    Point p = tile.GetComponent<Point>();
+                    switch (p.Type)
+                    {
+                        case '@':
+                            p.SR.enabled = false;
+                            break;
+                        case 'T':
+                            p.SR.color = Color.grey;
+                            break;
+                        case '.':
+                            p.SR.color = Color.red;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
