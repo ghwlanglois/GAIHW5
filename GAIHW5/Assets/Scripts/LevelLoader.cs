@@ -21,6 +21,7 @@ public class LevelLoader : MonoBehaviour {
     char[][] grid;
     int height;
     int width;
+    public string H_Type;
 
     // Use this for initialization
     void Start ()
@@ -272,7 +273,7 @@ public class LevelLoader : MonoBehaviour {
 
     public void SetColors(bool waypoints) {
         
-        Color wColor = waypoints? Color.grey : Color.red;
+        Color wColor = waypoints ? Color.grey : Color.red;
         Color tColor = Color.black;
         foreach (GameObject[] array in TileGrid) {
             foreach(GameObject tile in array) {
@@ -286,6 +287,10 @@ public class LevelLoader : MonoBehaviour {
                         break;
                     case '.':
                         p.SR.color = wColor;
+                        if (GUI_Type == "Tile")
+                        {
+                            p.SR.color = wColor;
+                        }
                         break;
                     default:
                         break;

@@ -6,23 +6,38 @@ public class Bouton : MonoBehaviour
 {
     public Button btn;
     public LevelLoader LL;
+    public string Type;
 
     void Start()
     {
         btn.onClick.AddListener(TaskOnClick);
-        btn.GetComponent<Text>().text = "Waypoint";
     }
 
     void TaskOnClick()
     {
-        if (LL.GUI_Type == "Waypoint")
+        if (Type == "TvW")
         {
-            LL.GUI_Type = "Tile";
+            if (LL.GUI_Type == "Waypoint")
+            {
+                LL.GUI_Type = "Tile";
+            }
+            else
+            {
+                LL.GUI_Type = "Waypoint";
+            }
+            btn.GetComponentInChildren<Text>().text = LL.GUI_Type;
         }
-        else
+        else if (Type == "H")
         {
-            LL.GUI_Type = "Waypoint";
+            if (LL.H_Type == "Default Heuristic")
+            {
+                LL.H_Type = "Extra Heuristic";
+            }
+            else
+            {
+                LL.H_Type = "Default Heuristic";
+            }
+            btn.GetComponentInChildren<Text>().text = LL.H_Type;
         }
-        btn.GetComponentInChildren<Text>().text = LL.GUI_Type;
     }
 }

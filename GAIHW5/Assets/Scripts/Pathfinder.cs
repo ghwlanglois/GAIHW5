@@ -24,6 +24,8 @@ public class Pathfinder : MonoBehaviour {
     public Point A;
     public Point B;
 
+    public float Weight;
+
     // Update is called once per frame
     void Update() {
         //if (Input.GetKeyDown(KeyCode.T)) {
