@@ -274,7 +274,7 @@ MonoBehaviour:
   by: 189
   A: {fileID: 0}
   B: {fileID: 0}
-  Weight: 0
+  Weight: 1
 --- !u!1001 &538294141
 Prefab:
   m_ObjectHideFlags: 0
@@ -748,7 +748,7 @@ Prefab:
     - target: {fileID: 114077828293505916, guid: e4acde94c403bbd4f825b45345f99c05,
         type: 2}
       propertyPath: m_Text
-      value: Waypoint
+      value: Tile
       objectReference: {fileID: 0}
     - target: {fileID: 114966969668176320, guid: e4acde94c403bbd4f825b45345f99c05,
         type: 2}
@@ -848,6 +848,7 @@ GameObject:
   - component: {fileID: 1735792700}
   - component: {fileID: 1735792699}
   - component: {fileID: 1735792698}
+  - component: {fileID: 1735792701}
   m_Layer: 5
   m_Name: InputField
   m_TagString: Untagged
@@ -971,6 +972,19 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1735792696}
+--- !u!114 &1735792701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1735792696}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9128ecc54752174eb8b3017efffd71c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IF: {fileID: 1735792698}
+  PF: {fileID: 483208912}
 --- !u!1 &1883862551
 GameObject:
   m_ObjectHideFlags: 0
@@ -998,9 +1012,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fee8e1a5dcf61d4d97fec1440a073f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  LL: {fileID: 1883862552}
   Tile: {fileID: 1877806036422416, guid: 77c9b0d9cb23694408a6de57a53fabdc, type: 2}
   Waypoint: {fileID: 1041723496217206, guid: 5eba905f3659e244fab5ffafa4a67603, type: 2}
   Map: {fileID: 4900000, guid: d153c8a0038df7448af5a01f17d55811, type: 3}
+  PF: {fileID: 483208912}
   GUI_Type: Waypoint
   ax: 0
   ay: 0

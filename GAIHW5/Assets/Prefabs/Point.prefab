@@ -52,6 +52,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2f48e9572e07f6e4699bf31b5dec8587, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isWaypoint: 0
   x: 0
   y: 0
   type: 0

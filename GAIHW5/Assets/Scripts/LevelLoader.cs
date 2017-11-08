@@ -5,10 +5,11 @@ using System.Text;
 using System.IO;
 
 public class LevelLoader : MonoBehaviour {
-    
+    public LevelLoader LL;
     public GameObject Tile;
     public GameObject Waypoint;
     public TextAsset Map;
+    public Pathfinder PF;
     public GameObject[][] TileGrid;
     public HashSet<GameObject> WaypointGrid;
     public string GUI_Type;
@@ -26,7 +27,7 @@ public class LevelLoader : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        GUI_Type = "Waypoint";
+        GUI_Type = "Tile";
         List<string> mapLines = new List<string>(Map.text.Split('\n'));
 
         string tmp;
@@ -74,53 +75,21 @@ public class LevelLoader : MonoBehaviour {
                 Point p = go.GetComponent<Point>();
                 p.X = j; p.Y = u; p.Type = t;
                 TileGrid[j][u] = (go);
-                x += 1.025f; 
+                x += 1.025f;
             }
             y -= 1.025f;
         }
 
         GenerateWaypoints();
         SetColors(false);
-
-        //float y = 0;
-        //for (int j = 0; j < height; ++j)
-        //{
-        //    float x = 0;
-        //    int uT = 0;
-        //    for (int u = 0; u < width-1; ++u)
-        //    {
-        //        char t = grid[j][u];
-        //        char next_t = grid[j][u+1];
-        //        if (t == 'T')
-        //        {
-        //            Puntos(j, uT, x, y, t);
-        //        }
-        //        else if (t == '@')
-        //        {
-        //            Puntos(j, uT, x, y, t);
-        //        }
-        //        else if (t == '.' && next_t == '.')
-        //        {
-        //            Puntos(j, uT, x, y, t);
-        //            ++u;
-        //        }
-        //        else if (t == '.' && next_t != '.')
-        //        {
-        //            x -= 0.257f;
-        //            Puntos(j, uT, x, y, t);
-        //            x -= 0.257f;
-        //        }
-        //        TileStates[j][uT] = 0;
-        //        x += 1.025f;
-        //        ++uT;
-        //    }
-        //    y -= 1.025f;
-        //}
     }
 
     GameObject CreatePoint(int j, int uT, float x, float y, char t)
     {
         GameObject point = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
+        TileInteract TI = point.GetComponent<TileInteract>();
+        //TI.LL = this;
+        //TI.PF = PF;
         return point;
     }
 
@@ -137,7 +106,7 @@ public class LevelLoader : MonoBehaviour {
 
     void GenerateWaypoints() {
         WaypointGrid = new HashSet<GameObject>();
-        for (int x = 0; x<height-1; x++) {
+        for (int x = 0; x < height - 1; x++) {
             for (int y = 0; y < width - 1; y++) {
                 int c = 0;
                 if (grid[x][y] == '.') {
@@ -162,13 +131,13 @@ public class LevelLoader : MonoBehaviour {
 
     void GenerateEdges() {
         HashSet<GameObject> used = new HashSet<GameObject>();
-        foreach (GameObject waypoint in WaypointGrid) {
-            used.Add(waypoint);
+        foreach (GameObject w in WaypointGrid) {
+            used.Add(w);
             foreach(GameObject other in WaypointGrid) {
                 if (used.Contains(other)) {
                     continue;
                 }
-                Point way = waypoint.GetComponent<Point>();
+                Point way = w.GetComponent<Point>();
                 Point o = other.GetComponent<Point>();
                 if (LineOfSight(way, o)) {
                     way.AddNeighbor(o);
@@ -272,42 +241,46 @@ public class LevelLoader : MonoBehaviour {
     }
 
     public void SetColors(bool waypoints) {
-        
         Color wColor = waypoints ? Color.grey : Color.red;
         Color tColor = Color.black;
         foreach (GameObject[] array in TileGrid) {
             foreach(GameObject tile in array) {
-                Point p = tile.GetComponent<Point>();
-                switch (tile.GetComponent<Point>().Type) {
-                    case '@':
-                        p.SR.enabled = false;
-                        break;
-                    case 'T':
-                        p.SR.color = tColor;
-                        break;
-                    case '.':
-                        p.SR.color = wColor;
-                        if (GUI_Type == "Tile")
-                        {
+                if (tile != null)
+                {
+                    Point p = tile.GetComponent<Point>();
+                    switch (tile.GetComponent<Point>().Type)
+                    {
+                        case '@':
+                            p.SR.enabled = false;
+                            break;
+                        case 'T':
+                            p.SR.color = tColor;
+                            break;
+                        case '.':
                             p.SR.color = wColor;
-                        }
-                        break;
-                    default:
-                        break;
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
         if (waypoints) {
             HashSet<Point> used = new HashSet<Point>();
             foreach (GameObject g in WaypointGrid) {
-                Point p = g.GetComponent<Point>();
-                used.Add(p);
-                p.SR.color = Color.red;
-                foreach (Point o in p.Neighbors) {
-                    if (used.Contains(o)) {
-                        continue;
+                if (g != null)
+                {
+                    Point p = g.GetComponent<Point>();
+                    used.Add(p);
+                    p.SR.color = Color.red;
+                    foreach (Point o in p.Neighbors)
+                    {
+                        if (used.Contains(o))
+                        {
+                            continue;
+                        }
+                        Debug.DrawLine(p.transform.position, o.transform.position, Color.red, 10f);
                     }
-                    Debug.DrawLine(p.transform.position, o.transform.position, Color.red,10f);
                 }
             }
         }
