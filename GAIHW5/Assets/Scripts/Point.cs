@@ -5,6 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Point : MonoBehaviour
 {
+    public bool isWaypoint = false;
     [SerializeField]
     int x;
     [SerializeField]
@@ -12,6 +13,7 @@ public class Point : MonoBehaviour
     [SerializeField]
     char type;
     SpriteRenderer sr;
+    HashSet<Point> neighbors;
 
     public int X {
         get {
@@ -44,6 +46,35 @@ public class Point : MonoBehaviour
         get {
             return sr;
         }
+    }
+
+    public HashSet<Point> Neighbors {
+        get {
+            if (neighbors == null) {
+                neighbors = new HashSet<Point>();
+            } if (!isWaypoint) {
+                if (x > 0) {
+                    neighbors.Add(GameManager.INSTANCE.levelLoader.TileGrid[X - 1][Y].GetComponent<Point>());
+                }
+                if (x < GameManager.INSTANCE.levelLoader.TileGrid.Length - 1) {
+                    neighbors.Add(GameManager.INSTANCE.levelLoader.TileGrid[X + 1][Y ].GetComponent<Point>());
+                }
+                if (y > 0) {
+                    neighbors.Add(GameManager.INSTANCE.levelLoader.TileGrid[X][Y - 1].GetComponent<Point>());
+                }
+                if (y < GameManager.INSTANCE.levelLoader.TileGrid[0].Length - 1) {
+                    neighbors.Add(GameManager.INSTANCE.levelLoader.TileGrid[X][Y + 1].GetComponent<Point>());
+                }
+            }
+            return neighbors;
+        }
+    }
+
+    public void AddNeighbor(Point p) {
+        if (neighbors == null) {
+            neighbors = new HashSet<Point>();
+        }
+        neighbors.Add(p);
     }
 
     private void Awake() {

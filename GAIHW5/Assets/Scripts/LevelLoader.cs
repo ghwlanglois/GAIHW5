@@ -7,9 +7,15 @@ using System.IO;
 public class LevelLoader : MonoBehaviour {
     
     public GameObject Tile;
+    public GameObject Waypoint;
     public TextAsset Map;
     public GameObject[][] TileGrid;
     public HashSet<GameObject> WaypointGrid;
+
+    public int ax;
+    public int ay;
+    public int bx;
+    public int by;
 
     char[][] grid;
     int height;
@@ -61,7 +67,7 @@ public class LevelLoader : MonoBehaviour {
             float x = 0;
             for (int u = 0; u < width; ++u) {
                 char t = grid[j][u];
-                GameObject go = Puntos(j, u, x, y, t);
+                GameObject go = CreatePoint(j, u, x, y, t);
                 Point p = go.GetComponent<Point>();
                 p.X = j; p.Y = u; p.Type = t;
                 TileGrid[j][u] = (go);
@@ -109,15 +115,157 @@ public class LevelLoader : MonoBehaviour {
         //}
     }
 
-    GameObject Puntos(int j, int uT, float x, float y, char t)
+    GameObject CreatePoint(int j, int uT, float x, float y, char t)
     {
         GameObject point = Instantiate(Tile, new Vector3(x, y, 0), Quaternion.identity);
-        SpriteRenderer sr = point.GetComponent<SpriteRenderer>();
+        return point;
+    }
+
+    GameObject CreateWaypoint(int x, int y) {
+        float nx = -0.5125f + x * -1.025f;
+        float ny = 0.5125f + y * 1.025f;
+        GameObject point = Instantiate(Waypoint, new Vector3(ny, nx, 0), Quaternion.identity);
+        Point p = point.GetComponent<Point>();
+        p.X = x;
+        p.Y = y;
+        p.isWaypoint = true;
         return point;
     }
 
     void GenerateWaypoints() {
         WaypointGrid = new HashSet<GameObject>();
+        for (int x = 0; x<height-1; x++) {
+            for (int y = 0; y < width - 1; y++) {
+                int c = 0;
+                if (grid[x][y] == '.') {
+                    c++;
+                }
+                if (grid[x + 1][y] == '.') {
+                    c++;
+                }
+                if (grid[x][y + 1] == '.') {
+                    c++;
+                }
+                if (grid[x + 1][y + 1] == '.') {
+                    c++;
+                }
+                if (c == 3) {
+                    WaypointGrid.Add(CreateWaypoint(x, y));
+                }
+            }
+        }
+        GenerateEdges();
+    }
+
+    void GenerateEdges() {
+        HashSet<GameObject> used = new HashSet<GameObject>();
+        foreach (GameObject waypoint in WaypointGrid) {
+            used.Add(waypoint);
+            foreach(GameObject other in WaypointGrid) {
+                if (used.Contains(other)) {
+                    continue;
+                }
+                Point way = waypoint.GetComponent<Point>();
+                Point o = other.GetComponent<Point>();
+                if (LineOfSight(way, o)) {
+                    way.AddNeighbor(o);
+                    o.AddNeighbor(way);
+                    Debug.DrawLine(way.transform.position, o.transform.position, Color.blue, Mathf.Infinity);
+                }
+            }
+        }
+    }
+
+    int GCD(int a, int b) {
+        while (b > 0) {
+            int rem = a % b;
+            a = b;
+            b = rem;
+        }
+        return a;
+    }
+
+    bool LineOfSight(Point a, Point b) {
+        int xDiff = b.X - a.X;
+        int yDiff = b.Y - a.Y;
+        int gcd = Mathf.Max(GCD(xDiff, yDiff),1);
+        xDiff /= gcd;
+        yDiff /= gcd;
+        int startX = a.X + (xDiff > 0 ? 1 : 0);
+        int startY = a.Y + (yDiff > 0 ? 1 : 0);
+        int loops = 0;
+        int curX = startX;
+        int curY = startY;
+        Point p;
+
+        if (GameManager.INSTANCE.levelLoader.TileGrid[startX][startY].GetComponent<Point>().Type != '.') {
+            return false;
+        } if (Mathf.Abs(xDiff) < Mathf.Abs(yDiff)) {
+            while (loops < 10000) {
+                loops++;
+                for (int y = 0; y < Mathf.Abs(yDiff); y++) {
+                    curY += yDiff > 0 ? 1 : -1;
+                    p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
+                    if (p.Type != '.') {
+                        loops = 10000;
+                        break;
+                    }
+                    if (isAdjacent(curX, curY, b)) {
+                        return true;
+                    }
+                }
+                if (loops == 10000) {
+                    break;
+                }
+                for (int x = 0; x < Mathf.Abs(xDiff); x++) {
+                    curX += xDiff > 0 ? 1 : -1;
+                    p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
+                    if (p.Type != '.') {
+                        loops = 10000;
+                        break;
+                    }
+                    if (isAdjacent(curX, curY, b)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        else {
+            while (loops < 10000) {
+                loops++;
+                for (int x = 0; x < Mathf.Abs(xDiff); x++) {
+                    curX += xDiff > 0 ? 1 : -1;
+                    p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
+                    if (p.Type != '.') {
+                        loops = 10000;
+                        break;
+                    }
+                    if (isAdjacent(curX, curY, b)) {
+                        Debug.Log(curX); Debug.Log(curY); Debug.Log(p);
+                        return true;
+                    }
+                }
+                if (loops == 10000) {
+                    break;
+                }
+                for (int y = 0; y < Mathf.Abs(yDiff); y++) {
+                    curY += yDiff > 0 ? 1 : -1;
+                    p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
+                    if (p.Type != '.') {
+                        loops = 10000;
+                        break;
+                    }
+                    if (isAdjacent(curX, curY, b)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    bool isAdjacent(int x, int y, Point p) {
+        return (p.X == x || p.X == x + 1) && (p.Y == y || p.Y == y + 1);
     }
 
     public void ResetColors() {
@@ -140,5 +288,14 @@ public class LevelLoader : MonoBehaviour {
             }
         }
        
+    }
+
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.L)) {
+            Point A = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
+            Point B = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
+            Debug.Log(A); Debug.Log(B);
+            Debug.Log(LineOfSight(A, B));
+        }
     }
 }

@@ -21,14 +21,22 @@ public class Pathfinder : MonoBehaviour {
     public int bx;
     public int by;
 
+    public Point A;
+    public Point B;
+
     // Update is called once per frame
     void Update() {
-        if (Input.GetKeyDown(KeyCode.G)) {
-            Point A = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
-            Point B = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
+        if (Input.GetKeyDown(KeyCode.T)) {
+            Point Ap = GameManager.INSTANCE.levelLoader.TileGrid[ax][ay].GetComponent<Point>();
+            Point Bp = GameManager.INSTANCE.levelLoader.TileGrid[bx][by].GetComponent<Point>();
+            Debug.Log(Ap); Debug.Log(Bp);
+            List<Point> path = new List<Point>();
+            StartCoroutine(aStar(Ap,Bp,path));
+        }
+        if (Input.GetKeyDown(KeyCode.W)) {
             Debug.Log(A); Debug.Log(B);
             List<Point> path = new List<Point>();
-            StartCoroutine(aStar(A,B,path));
+            StartCoroutine(aStar(A, B, path));
         }
     }
 
@@ -88,14 +96,10 @@ public class Pathfinder : MonoBehaviour {
             openSet.Remove(current);
             closedSet.Add(current);
             current.SR.color = exploredColor;
-            for (int i = 0; i < 4; i++) {
-                //TODO: actually get neighbors
-                Point neighbor;
-                try {
-                    neighbor = GameManager.INSTANCE.levelLoader.TileGrid[current.X + (i % 2) * (i >= 2 ? -1 : 1)][current.Y + ((i + 1) % 2) * (i >= 2 ? -1 : 1)].GetComponent<Point>();
-                } catch (System.Exception e) {
-                    continue;
-                }
+            Debug.Log(current);
+            Debug.Log(current.Neighbors.Count);
+            foreach (Point neighbor in current.Neighbors) {
+                Debug.Log("Neighbor"); Debug.Log(neighbor);
                 if (closedSet.Contains(neighbor)){
                     continue;       // Ignore the neighbor which is already evaluated.
                 }
