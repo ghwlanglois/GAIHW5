@@ -60,6 +60,7 @@ public class GameManager : MonoBehaviour {
             Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, Camera.main.nearClipPlane));
             int u = (int)(p.x / 1.025f),
                 j = (int)Mathf.Abs(p.y / 1.025f);
+
             Debug.Log(j.ToString() + ", " + u.ToString());
             p.z = 0;
             if (!waypoints && levelLoader.isValidCoord(j, u)) {
