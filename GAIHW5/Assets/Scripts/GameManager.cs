@@ -33,8 +33,9 @@ public class GameManager : MonoBehaviour {
     {
         if (Input.GetButtonDown("Fire1"))
         {
-            int j = (int)(Input.mousePosition.x / 1.025f),
-                u = (int)(Input.mousePosition.y / 1.025f);
+            Vector3 p = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0));
+            int j = (int)(p.x / 1.025f),
+                u = (int)(p.y / 1.025f);
             Debug.Log(j.ToString() + ", " + u.ToString());
             if (levelLoader.TileGrid[j][u] != null)
             {
