@@ -10,7 +10,6 @@ public class LevelLoader : MonoBehaviour {
     public TextAsset Map;
     public GameObject[][] TileGrid;
     public HashSet<GameObject> WaypointGrid;
-    public string GUI_Type;
 
     public int ax;
     public int ay;
@@ -25,7 +24,6 @@ public class LevelLoader : MonoBehaviour {
     // Use this for initialization
     void Start ()
     {
-        GUI_Type = "Tile";
         List<string> mapLines = new List<string>(Map.text.Split('\n'));
 
         string tmp;
@@ -79,7 +77,7 @@ public class LevelLoader : MonoBehaviour {
         }
 
         GenerateWaypoints();
-        UpdateColors();
+        SetColors(false);
     }
 
     GameObject CreatePoint(int j, int uT, float x, float y, char t)
@@ -152,6 +150,10 @@ public class LevelLoader : MonoBehaviour {
         return a;
     }
 
+    public bool isValidCoord(int x, int y) {
+        return x >= 0 && x < height && y >= 0 && y < width;
+    }
+
     bool LineOfSight(Point a, Point b) {
         int xDiff = b.X - a.X;
         int yDiff = b.Y - a.Y;
@@ -172,6 +174,10 @@ public class LevelLoader : MonoBehaviour {
                 loops++;
                 for (int y = 0; y < Mathf.Abs(yDiff); y++) {
                     curY += yDiff > 0 ? 1 : -1;
+                    if (!isValidCoord(curX, curY)) {
+                        loops = 10000;
+                        break;
+                    }
                     p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
                     if (p.Type != '.') {
                         loops = 10000;
@@ -186,6 +192,10 @@ public class LevelLoader : MonoBehaviour {
                 }
                 for (int x = 0; x < Mathf.Abs(xDiff); x++) {
                     curX += xDiff > 0 ? 1 : -1;
+                    if (!isValidCoord(curX, curY)) {
+                        loops = 10000;
+                        break;
+                    }
                     p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
                     if (p.Type != '.') {
                         loops = 10000;
@@ -202,6 +212,10 @@ public class LevelLoader : MonoBehaviour {
                 loops++;
                 for (int x = 0; x < Mathf.Abs(xDiff); x++) {
                     curX += xDiff > 0 ? 1 : -1;
+                    if (!isValidCoord(curX, curY)) {
+                        loops = 10000;
+                        break;
+                    }
                     p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
                     if (p.Type != '.') {
                         loops = 10000;
@@ -217,6 +231,10 @@ public class LevelLoader : MonoBehaviour {
                 }
                 for (int y = 0; y < Mathf.Abs(yDiff); y++) {
                     curY += yDiff > 0 ? 1 : -1;
+                    if (!isValidCoord(curX, curY)) {
+                        loops = 10000;
+                        break;
+                    }
                     p = GameManager.INSTANCE.levelLoader.TileGrid[curX][curY].GetComponent<Point>();
                     if (p.Type != '.') {
                         loops = 10000;
@@ -236,6 +254,7 @@ public class LevelLoader : MonoBehaviour {
     }
 
     public void SetColors(bool waypoints) {
+        GameManager.INSTANCE.waypoints = waypoints;
         Color wColor = waypoints ? Color.grey : Color.red;
         Color tColor = Color.black;
         foreach (GameObject[] array in TileGrid) {
@@ -281,17 +300,9 @@ public class LevelLoader : MonoBehaviour {
         }
        
     }
-
-    public void UpdateColors() {
-        if (GUI_Type == "Waypoint") {
-            SetColors(true);
-        } else {
-            SetColors(false);
-        }
-    }
+    
 
     void Update()
     {
-        UpdateColors();
     }
 }

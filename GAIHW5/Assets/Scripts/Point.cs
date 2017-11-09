@@ -98,29 +98,36 @@ public class Point : MonoBehaviour
         return this.X == o.X && this.Y == o.Y;
     }
 
-    // override object.Equals
-    static public bool operator== (Point a, Point b) {
-        //       
-        // See the full list of guidelines at
-        //   http://go.microsoft.com/fwlink/?LinkID=85237  
-        // and also the guidance for operator== at
-        //   http://go.microsoft.com/fwlink/?LinkId=85238
-        //
-       
-        return a.X == b.X && a.Y == b.Y;
-    }
+    //// override object.Equals
+    //static public bool operator== (Point a, Point b) {
+    //    //       
+    //    // See the full list of guidelines at
+    //    //   http://go.microsoft.com/fwlink/?LinkID=85237  
+    //    // and also the guidance for operator== at
+    //    //   http://go.microsoft.com/fwlink/?LinkId=85238
+    //    //
 
-    // override object.Equals
-    static public bool operator !=(Point a, Point b) {
-        //       
-        // See the full list of guidelines at
-        //   http://go.microsoft.com/fwlink/?LinkID=85237  
-        // and also the guidance for operator== at
-        //   http://go.microsoft.com/fwlink/?LinkId=85238
-        //
+    //    try {
+    //        return a.X == b.X && a.Y == b.Y;
+    //    } catch (System.Exception e) {
+    //        return false;
+    //    }
+    //}
 
-        return a.X != b.X || a.Y != b.Y;
-    }
+    //// override object.Equals
+    //static public bool operator !=(Point a, Point b) {
+    //    //       
+    //    // See the full list of guidelines at
+    //    //   http://go.microsoft.com/fwlink/?LinkID=85237  
+    //    // and also the guidance for operator== at
+    //    //   http://go.microsoft.com/fwlink/?LinkId=85238
+    //    //
+    //    try {
+    //        return a.X != b.X || a.Y != b.Y;
+    //    } catch(System.Exception e) {
+    //        return true;
+    //    }
+    //}
 
 
     // override object.GetHashCode

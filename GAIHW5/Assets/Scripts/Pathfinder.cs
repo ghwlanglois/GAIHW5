@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Pathfinder : MonoBehaviour {
 
@@ -16,15 +17,8 @@ public class Pathfinder : MonoBehaviour {
     public Color exploredColor = Color.blue;
     public Color pathColor = Color.green;
 
-    public int ax;
-    public int ay;
-    public int bx;
-    public int by;
-
-    public Point A;
-    public Point B;
-
-    public float Weight;
+    public Slider slider;
+    float Weight = .5f;
 
     // Update is called once per frame
     void Update() {
@@ -42,12 +36,19 @@ public class Pathfinder : MonoBehaviour {
         //}
     }
 
-    int distBetweenPoints(Point a, Point b) {
-        return (int)Mathf.Sqrt(Mathf.Pow(a.X - b.X,2) + Mathf.Pow(a.Y - b.Y,2));
+    public void SetWeight () {
+        this.Weight = slider.value;
     }
 
-    Point getNextPoint(HashSet<Point> openSet, Dictionary<Point,int> fScore) {
-        int minScore = int.MaxValue;
+    float distBetweenPoints(Point a, Point b) {
+        if (GameManager.INSTANCE.distHeuristic) {
+            return Mathf.Sqrt(Mathf.Pow(a.X - b.X,2) + Mathf.Pow(a.Y - b.Y,2));
+        }
+        return Mathf.Abs(b.X - a.X) + Mathf.Abs(b.Y - a.Y);
+    }
+
+    Point getNextPoint(HashSet<Point> openSet, Dictionary<Point,float> fScore) {
+        float minScore = float.PositiveInfinity;
         Point closest = null;
         foreach (Point p in openSet) {
             if (fScore[p] < minScore) {
@@ -58,7 +59,7 @@ public class Pathfinder : MonoBehaviour {
         return closest;
     }
 
-    IEnumerator aStar(Point start, Point goal, List<Point> path) {
+    public IEnumerator aStar(Point start, Point goal, List<Point> path) {
         GameManager.INSTANCE.levelLoader.SetColors(start.isWaypoint);
         // The set of nodes already evaluated
         HashSet<Point> closedSet = new HashSet<Point>();
@@ -74,19 +75,19 @@ public class Pathfinder : MonoBehaviour {
         Dictionary<Point, Point> cameFrom = new Dictionary<Point, Point>();
 
         // For each node, the cost of getting from the start node to that node.
-        Dictionary<Point, int> gScore = new Dictionary<Point, int>();
+        Dictionary<Point, float> gScore = new Dictionary<Point, float>();
 
         // The cost of going from start to start is zero.
         gScore[start] = 0;
 
         // For each node, the total cost of getting from the start node to the goal
         // by passing by that node. That value is partly known, partly heuristic.
-        Dictionary<Point, int> fScore = new Dictionary<Point, int>();
-
+        Dictionary<Point, float> fScore = new Dictionary<Point, float>();
+        Point last = null;
         // For the first node, that value is completely heuristic.
-        fScore[start] = distBetweenPoints(start, goal);
+        fScore[start] = Weight * distBetweenPoints(start, goal);
         int breakout = 0;
-        while (openSet.Count > 0 && breakout < 10000) {
+        while (openSet.Count > 0 && breakout < 100000) {
             breakout++;
             //the node in openSet having the lowest fScore[] value
             Point current = getNextPoint(openSet,fScore);
@@ -98,8 +99,9 @@ public class Pathfinder : MonoBehaviour {
             openSet.Remove(current);
             closedSet.Add(current);
             current.SR.color = exploredColor;
-            Debug.Log(current);
-            Debug.Log(current.Neighbors.Count);
+            if (current.isWaypoint && last != null) {
+                Debug.DrawLine(last.transform.position, current.transform.position, exploredColor, 10f);
+            }
             foreach (Point neighbor in current.Neighbors) {
                 Debug.Log("Neighbor"); Debug.Log(neighbor);
                 if (closedSet.Contains(neighbor)){
@@ -109,11 +111,13 @@ public class Pathfinder : MonoBehaviour {
                 if (!openSet.Contains(neighbor) && neighbor.Type == WALKABLE) { // Discover a new node
                     neighbor.SR.color = inQueueColor;
                     openSet.Add(neighbor);
+                    if (current.isWaypoint)
+                        Debug.DrawLine(current.transform.position, neighbor.transform.position, inQueueColor, 10f);
                 }
 
 
                 // The distance from start to a neighbor
-                int tentative_gScore = gScore[current] + distBetweenPoints(current, neighbor);
+                float tentative_gScore = gScore[current] + distBetweenPoints(current, neighbor);
                 if (gScore.ContainsKey(neighbor) && tentative_gScore >= gScore[neighbor]) {
                     continue; // This is not a better path.
                 }
@@ -121,11 +125,12 @@ public class Pathfinder : MonoBehaviour {
                 // This path is the best until now. Record it!
                 cameFrom[neighbor] = current;
                 gScore[neighbor] = tentative_gScore;
-                fScore[neighbor] = gScore[neighbor] + distBetweenPoints(neighbor, goal);
+                fScore[neighbor] = (1-Weight) * gScore[neighbor] + Weight * distBetweenPoints(neighbor, goal);
             }
-            if (breakout%10 == 0) {
+            if (breakout%10 == 0 || (current.isWaypoint && breakout %5==0)) {
                 yield return null;
             }
+            last = current;
         }
     }
 
@@ -136,10 +141,14 @@ public class Pathfinder : MonoBehaviour {
             current = cameFrom[current];
             path.Insert(0, current);
         }
+        Point last = null;
         foreach(Point p in path) {
             p.SR.color = pathColor;
-            yield return new WaitForSeconds(pathDelay / 4);
+            if (p.isWaypoint&&last!=null) {
+                Debug.DrawLine(last.transform.position, p.transform.position, pathColor, 10f);
+            }
+            last = p;
         }
-        
+        yield return null;
     }
 }
